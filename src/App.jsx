@@ -10,6 +10,8 @@ function App() {
   return (
     <>
       <>
+        <ParticleLoader />
+
         <Routes>
           <Route path="/" element=<Layout />>
             <Route path="" element=<LoginForm /> />

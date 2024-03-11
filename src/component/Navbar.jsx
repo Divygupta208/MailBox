@@ -14,7 +14,7 @@ const Navbar = () => {
     <motion.div
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { duration: 1 } }}
-      className="bg-black dark:bg-white h-[8vh] w-full justify-start z-50 "
+      className=" backdrop-blur-sm bg-violet-900/30 dark:bg-white h-[8vh] w-full justify-start z-50 "
     >
       <ul className="flex justify-evenly p-6">
         <motion.li whileHover={{ scale: 1.1 }}>

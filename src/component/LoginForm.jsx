@@ -3,6 +3,7 @@ import Card from "./Card";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import ParticleLoader from "./Particles";
 
 const LoginForm = () => {
   //   const dispatch = useDispatch();
@@ -114,13 +115,13 @@ const LoginForm = () => {
       <ToastContainer />
       <Card>
         <form
-          className="form-main flex flex-col relative justify-self-center items-center "
+          className="form-main flex flex-col backdrop-blur-sm bg-white/10 justify-self-center items-center "
           onSubmit={submitHandler}
         >
           {login ? (
-            <h2 className="text-2xl  mt-6">Log in</h2>
+            <h2 className="text-2xl text-white  mt-6">Log in</h2>
           ) : (
-            <h2 className="text-2xl mt-6">Sign Up</h2>
+            <h2 className="text-2xl mt-6 text-white">Sign Up</h2>
           )}
           <div className="text-center">
             <input
@@ -167,28 +168,29 @@ const LoginForm = () => {
             </button>
           )}
         </form>
-
-        {!login && (
-          <div className="relative mt-10 bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
-            already have an account?
-            <> </>
-            <button onClick={loginHandler} className="text-green-900">
-              log in
-            </button>
-          </div>
-        )}
-        {login && (
-          <button className="mx-auto text-red-600">Forgot password ?</button>
-        )}
-        {login && (
-          <div className="relative mt-10 bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
-            Create An Acoount?
-            <> </>
-            <button onClick={loginHandler} className="text-green-900">
-              sign up
-            </button>
-          </div>
-        )}
+        <div className="backdrop-blur-sm bg-white/10 text-center w-[100%] ">
+          {!login && (
+            <div className="relative mt-10 bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
+              already have an account?
+              <> </>
+              <button onClick={loginHandler} className="text-green-900">
+                log in
+              </button>
+            </div>
+          )}
+          {login && (
+            <button className="mx-auto text-red-600">Forgot password ?</button>
+          )}
+          {login && (
+            <div className="relative mt-10 bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
+              Create An Acoount?
+              <> </>
+              <button onClick={loginHandler} className="text-green-900">
+                sign up
+              </button>
+            </div>
+          )}
+        </div>
       </Card>
     </>
   );
