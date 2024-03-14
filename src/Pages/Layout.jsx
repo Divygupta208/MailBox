@@ -1,13 +1,16 @@
 import React from "react";
 import Navbar from "../component/Navbar";
 import { Outlet } from "react-router-dom";
-import "./Layout.css";
+
+import IconSideNav from "../component/SideBar";
+import ComposeMail from "../component/ComposeMail";
 const Layout = () => {
   return (
-    <div className="layout">
+    <>
       <Navbar />
+      <IconSideNav />
       <Outlet />
-    </div>
+    </>
   );
 };
 

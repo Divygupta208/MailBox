@@ -5,17 +5,20 @@ import LoginForm from "./component/LoginForm";
 import Particles from "./component/Particles";
 import ParticleLoader from "./component/Particles";
 import HomePage from "./Pages/HomePage";
+import ComposeMail from "./component/ComposeMail";
+import ComposeMailForm from "./component/ComposeMail";
 
 function App() {
   return (
     <>
       <>
-        <ParticleLoader />
+        {/* <ParticleLoader /> */}
 
         <Routes>
-          <Route path="/" element=<Layout />>
-            <Route path="" element=<LoginForm /> />
-            <Route path="Home" element=<HomePage /> />
+          <Route path="/" element=<LoginForm /> />
+          <Route path="/Home" element=<Layout />>
+            <Route path="" element=<HomePage /> />
+            <Route path="compose" element=<ComposeMailForm /> />
           </Route>
         </Routes>
       </>

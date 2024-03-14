@@ -58,7 +58,7 @@ const LoginForm = () => {
 
         if (response.ok) {
           const data = await response.json();
-
+          localStorage.setItem("email", data.email);
           localStorage.setItem("token", data.idToken);
           //   dispatch(authAction.setToken(data.idToken));
           //   dispatch(authAction.setIsLoggedIn(true));
