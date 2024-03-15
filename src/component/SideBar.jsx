@@ -11,6 +11,7 @@ import { Link, Navigate } from "react-router-dom";
 import ComposeMailForm from "./ComposeMail";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../store/ui-slice";
+import { Example } from "./NeuButton";
 
 const IconSideNav = () => {
   const [expanded, setExpanded] = useState(false);
@@ -41,7 +42,7 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
   return (
     // NOTE: In prod, you'd likely set height to h-screen and fix to the viewport
     <motion.nav
-      className={`h-[100vh] w-fit bg-[#fddddd] p-4 flex flex-col items-center gap-2 relative  `}
+      className={`h-[100vh] w-fit bg-[#dddddd] p-4 flex flex-col items-center gap-2 relative  `}
       initial={{ width: "70px", x: -100 }} // Initial width of the sidebar
       animate={{
         width: expanded ? "250px" : "80px",
@@ -52,17 +53,12 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
         x: { duration: 1 },
       }} // Animation duration and easing function
     >
-      {/* Temp logo from https://logoipsum.com/ */}
-
-      <button
-        onClick={expandSideBar}
-        className="absolute mt-6 bg-black p-2 rounded-full"
-      >
-        <SlMenu />
-      </button>
+      <div onClick={expandSideBar}>
+        <Example />
+      </div>
 
       <div className="flex gap-4 justify-center mt-20" onClick={showCompose}>
-        <Link to={"/Home/compose"}>
+        <Link to={"compose"}>
           <NavItem selected={selected === 0} id={0} setSelected={setSelected}>
             <TfiWrite />
           </NavItem>
@@ -70,12 +66,17 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
         {expanded && <div className="bold">Tailwind css</div>}
       </div>
 
-      <NavItem selected={selected === 1} id={1} setSelected={setSelected}>
-        <BsFillInboxesFill />
-      </NavItem>
-      <NavItem selected={selected === 2} id={2} setSelected={setSelected}>
-        <RiMailSendFill />
-      </NavItem>
+      <Link to={"inbox"}>
+        <NavItem selected={selected === 1} id={1} setSelected={setSelected}>
+          <BsFillInboxesFill />
+        </NavItem>
+      </Link>
+
+      <Link to={"sent"}>
+        <NavItem selected={selected === 2} id={2} setSelected={setSelected}>
+          <RiMailSendFill />
+        </NavItem>
+      </Link>
       <NavItem selected={selected === 3} id={3} setSelected={setSelected}>
         <RiDraftLine />
       </NavItem>
@@ -89,7 +90,7 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
 const NavItem = ({ children, selected, id, setSelected }) => {
   return (
     <motion.button
-      className="p-3 text-xl bg-black hover:bg-[#FA255E] rounded-3xl transition-colors relative"
+      className="p-3 text-xl bg-black hover:bg-[#594c67] rounded-3xl transition-colors relative"
       onClick={() => setSelected(id)}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
@@ -98,7 +99,7 @@ const NavItem = ({ children, selected, id, setSelected }) => {
       <AnimatePresence>
         {selected && (
           <motion.span
-            className="absolute inset-0 rounded-md bg-[#871937] z-0"
+            className="absolute inset-0 rounded-md bg-[#6629cf] z-0"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}

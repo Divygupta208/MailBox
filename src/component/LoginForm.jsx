@@ -62,7 +62,7 @@ const LoginForm = () => {
           localStorage.setItem("token", data.idToken);
           //   dispatch(authAction.setToken(data.idToken));
           //   dispatch(authAction.setIsLoggedIn(true));
-          navigate("/Home");
+          navigate(`${data.email}/Home`);
           setSending(false);
           notify("successfully signed in");
         } else {
