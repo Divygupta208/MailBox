@@ -7,6 +7,8 @@ import ParticleLoader from "./component/Particles";
 import HomePage from "./Pages/HomePage";
 import ComposeMail from "./component/ComposeMail";
 import ComposeMailForm from "./component/ComposeMail";
+import SentMails from "./component/SentMails";
+import ReceivedMails from "./component/ReceivedMails";
 
 function App() {
   return (
@@ -16,9 +18,11 @@ function App() {
 
         <Routes>
           <Route path="/" element=<LoginForm /> />
-          <Route path="/Home" element=<Layout />>
+          <Route path="/:id/Home" element=<Layout />>
             <Route path="" element=<HomePage /> />
             <Route path="compose" element=<ComposeMailForm /> />
+            <Route path="sent" element=<SentMails /> />
+            <Route path="inbox" element=<ReceivedMails /> />
           </Route>
         </Routes>
       </>
