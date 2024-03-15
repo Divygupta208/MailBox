@@ -7,7 +7,7 @@ const uiSlice = createSlice({
   },
   reducers: {
     setShowCompose: (state, action) => {
-      state.showCompose = true;
+      state.showCompose = !state.showCompose;
     },
   },
 });
