@@ -14,7 +14,7 @@
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.3.0",
     "draft-js": "^0.11.7",
-    "framer-motion": "^11.0.8",
+    "framer-motion": "^11.0.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
