@@ -13,6 +13,15 @@ const mailSlice = createSlice({
     setReceivedMails: (state, action) => {
       state.receivedMails = action.payload;
     },
+    updateReceivedMail(state, action) {
+      const updatedMail = action.payload;
+      const index = state.receivedMails.findIndex(
+        (mail) => mail.id === updatedMail.id
+      );
+      if (index !== -1) {
+        state.receivedMails[index] = updatedMail;
+      }
+    },
   },
 });
 
