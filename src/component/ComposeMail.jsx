@@ -25,7 +25,7 @@ const ComposeMailForm = () => {
     const body = BodyRef.current.value;
 
     //part-1 fetching users unique Ids;
-    const fetchUserId = async (userMail, receiver) => {
+    const fetchUserId = async (userMail) => {
       const response = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=
         AIzaSyDpOjJsAurA_2hvvb5UoPxME3muFlO0YZQ`,
@@ -53,7 +53,7 @@ const ComposeMailForm = () => {
       }
     };
 
-    fetchUserId(userMail, receiverMail.current.value);
+    fetchUserId(userMail);
 
     //part-2  storing in sent mails as sending mails
 
@@ -83,6 +83,8 @@ const ComposeMailForm = () => {
             receiverMail: receiverMail,
             subject: subject,
             body: body,
+            starred: false,
+            read: false,
             timestamp: new Date().toISOString(),
           }),
           headers: {
@@ -116,6 +118,8 @@ const ComposeMailForm = () => {
             senderMail: senderMail,
             subject: subject,
             body: body,
+            starred: false,
+            read: false,
             timestamp: new Date().toISOString(),
           }),
         }
