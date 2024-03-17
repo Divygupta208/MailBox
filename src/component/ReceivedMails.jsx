@@ -59,6 +59,7 @@ const ReceivedMails = () => {
       }
     );
     const data = await response.json();
+    dispatch(mailAction.updateReceivedMail(data));
   };
 
   const toggleStarredMessage = async (
@@ -76,7 +77,7 @@ const ReceivedMails = () => {
         method: "PUT",
         body: JSON.stringify({
           senderMail: sentBy,
-          starred: newStarredStatus, // Pass the updated starred status
+          starred: newStarredStatus,
           subject: subject,
           body: body,
           read: read,
@@ -86,7 +87,8 @@ const ReceivedMails = () => {
       }
     );
     const data = await response.json();
-    // Handle response data if needed
+
+    dispatch(mailAction.updateReceivedMail(data));
   };
 
   return (

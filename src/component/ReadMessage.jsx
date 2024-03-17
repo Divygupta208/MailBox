@@ -8,14 +8,7 @@ import { RiDeleteBin4Fill } from "react-icons/ri";
 import { MdDriveFileMoveRtl } from "react-icons/md";
 import { TiArrowForward } from "react-icons/ti";
 import { BsShieldFillX } from "react-icons/bs";
-import {
-  Navigate,
-  Outlet,
-  redirect,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const ReadMessage = () => {
   const userMail = useParams();
