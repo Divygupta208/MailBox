@@ -6,7 +6,7 @@ const SentMailList = ({ sentTo, starred, subject, body, timestamp }) => {
 
   return (
     <motion.div
-      className="rounded-lg shadow-lg  border-gray-300 p-2 flex flex-col w-[80vw]"
+      className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

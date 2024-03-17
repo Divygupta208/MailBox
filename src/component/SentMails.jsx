@@ -36,16 +36,21 @@ const SentMails = () => {
 
   return (
     <div className="mt-[-100vh] ml-36 w-full h-[100vh]  text-black p-11">
-      {sentMails.map((mail) => (
-        <SentMailList
-          key={mail.id}
-          sentTo={mail.receiverMail}
-          starred={false}
-          subject={mail.subject}
-          body={mail.body.replace(/(<([^>]+)>)/gi, "")}
-          timestamp={mail.timestamp}
-        />
-      ))}
+      <ul>
+        {sentMails.map((mail) => (
+          <li key={mail.id}>
+            <SentMailList
+              id={mail.id}
+              sentTo={mail.receiverMail}
+              starred={mail.starred}
+              read={mail.read}
+              subject={mail.subject}
+              body={mail.body.replace(/(<([^>]+)>)/gi, "")}
+              timestamp={mail.timestamp}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
