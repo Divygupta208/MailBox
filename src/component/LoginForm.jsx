@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import ParticleLoader from "./Particles";
+import { userActions } from "../store/user-slice";
 
 const LoginForm = () => {
   //   const dispatch = useDispatch();
@@ -60,8 +61,10 @@ const LoginForm = () => {
           const data = await response.json();
           localStorage.setItem("email", data.email);
           localStorage.setItem("token", data.idToken);
-          //   dispatch(authAction.setToken(data.idToken));
-          //   dispatch(authAction.setIsLoggedIn(true));
+          localStorage.setItem("isLoggedIn", true);
+          dispatch(userActions.setToken(data.idToken));
+          dispatch(userActions.setIsLoggedIn(true));
+          dispatch(userActions.setEmail(data.email));
           navigate(`${data.email}/Home`);
           setSending(false);
           notify("successfully signed in");
