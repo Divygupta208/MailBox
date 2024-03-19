@@ -10,6 +10,7 @@ const ReceivedMails = () => {
   const dispatch = useDispatch();
   const userMail = useParams();
   const navigate = useNavigate();
+  const totalUnread = useSelector((state) => state.mails.totalUnread);
   const [starred, setStarred] = useState();
   const receivedMails = useSelector((state) => state.mails.receivedMails);
   const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
@@ -29,6 +30,16 @@ const ReceivedMails = () => {
         }));
 
         dispatch(mailAction.setReceivedMails(receivedMailArray));
+
+        const totalUnread = receivedMailArray.reduce((count, email) => {
+          if (!email.read) {
+            return count + 1;
+          } else {
+            return count;
+          }
+        }, 0);
+
+        dispatch(mailAction.setUnread(totalUnread));
       }
     };
 
@@ -41,8 +52,25 @@ const ReceivedMails = () => {
     starred,
     subject,
     body,
-    timestamp
+    timestamp,
+    messageRead
   ) => {
+    const updatedReceivedMails = receivedMails.map((mail) =>
+      mail.id === id ? { ...mail, read: true } : mail
+    );
+
+    dispatch(mailAction.setReceivedMails(updatedReceivedMails));
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const totalUnread = updatedReceivedMails.reduce((count, email) => {
+      if (!email.read) {
+        return count + 1;
+      } else {
+        return count;
+      }
+    }, 0);
+
     const response = await fetch(
       `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${decodedMail}/${id}.json`,
       {
@@ -59,7 +87,8 @@ const ReceivedMails = () => {
       }
     );
     const data = await response.json();
-    dispatch(mailAction.updateReceivedMail(data));
+
+    dispatch(mailAction.setUnread(totalUnread));
   };
 
   const toggleStarredMessage = async (
@@ -71,6 +100,14 @@ const ReceivedMails = () => {
     read,
     timestamp
   ) => {
+    const updatedReceivedMails = receivedMails.map((mail) =>
+      mail.id === id ? { ...mail, starred: newStarredStatus } : mail
+    );
+
+    dispatch(mailAction.setReceivedMails(updatedReceivedMails));
+
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
     const response = await fetch(
       `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${decodedMail}/${id}.json`,
       {
@@ -87,8 +124,6 @@ const ReceivedMails = () => {
       }
     );
     const data = await response.json();
-
-    dispatch(mailAction.updateReceivedMail(data));
   };
 
   return (

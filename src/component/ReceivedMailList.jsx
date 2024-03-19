@@ -16,12 +16,20 @@ const ReceivedMailList = ({
   const date = new Date(timestamp);
 
   const [messageRead, setMessageRead] = useState(read);
+
   const [messageStarred, setMessageStarred] = useState(starred);
   const userMail = useParams();
   const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
   const navigate = useNavigate();
 
-  const handleMailClick = (id, sentBy, subject, body, timestamp) => {
+  const handleMailClick = (
+    id,
+    sentBy,
+    subject,
+    body,
+    timestamp,
+    messageStarred
+  ) => {
     navigate("readmail", {
       state: {
         email: {
@@ -39,8 +47,16 @@ const ReceivedMailList = ({
 
   const readMessage = async () => {
     setMessageRead(true);
-    handleMailClick(id, sentBy, subject, body, timestamp);
-    readMessageHandler(id, sentBy, starred, subject, body, timestamp);
+    handleMailClick(id, sentBy, subject, body, timestamp, messageStarred);
+    readMessageHandler(
+      id,
+      sentBy,
+      starred,
+      subject,
+      body,
+      timestamp,
+      messageRead
+    );
   };
 
   //toggle starred
