@@ -5,16 +5,20 @@ import "react-quill/dist/quill.snow.css";
 import { AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../store/user-slice";
+import { useParams } from "react-router-dom";
 
 const ComposeMailForm = () => {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.ui.showCompose);
   const senderMail = useRef();
+  const useremail = useParams();
+  localStorage.setItem("email", useremail.id);
   const receiverMail = useRef();
   const subjectRef = useRef();
   const BodyRef = useRef();
   const token = useSelector((state) => state.user.token);
   const userMail = useSelector((state) => state.user.email);
+
   const receiverId = useSelector((state) => state.user.receiverId);
   const userId = useSelector((state) => state.user.userUId);
 
@@ -165,7 +169,7 @@ const ComposeMailForm = () => {
                 <input
                   type="email"
                   ref={senderMail}
-                  value={userMail}
+                  value={useremail.id}
                   id="sender"
                   name="sender"
                   className="input-field w-full rounded-lg"
