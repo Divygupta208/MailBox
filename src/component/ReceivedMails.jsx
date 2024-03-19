@@ -5,11 +5,13 @@ import { mailAction } from "../store/mails-slice";
 import { Navigate, Outlet, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ReadMessage from "./ReadMessage";
+import { ToastContainer } from "react-toastify";
 
 const ReceivedMails = () => {
   const dispatch = useDispatch();
   const userMail = useParams();
   const navigate = useNavigate();
+  const notify = (message) => toast(message);
   const totalUnread = useSelector((state) => state.mails.totalUnread);
   const [starred, setStarred] = useState();
   const receivedMails = useSelector((state) => state.mails.receivedMails);
@@ -106,8 +108,6 @@ const ReceivedMails = () => {
 
     dispatch(mailAction.setReceivedMails(updatedReceivedMails));
 
-    await new Promise((resolve) => setTimeout(resolve, 5));
-
     const response = await fetch(
       `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${decodedMail}/${id}.json`,
       {
@@ -126,30 +126,65 @@ const ReceivedMails = () => {
     const data = await response.json();
   };
 
+  const deleteMailHandler = async (id) => {
+    try {
+      await fetch(
+        `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${decodedMail}/${id}.json`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      const receivedMailsNew = receivedMails.filter((mail) => mail.id !== id);
+
+      const totalUnread = receivedMailsNew.reduce((count, email) => {
+        if (!email.read) {
+          return count + 1;
+        } else {
+          return count;
+        }
+      }, 0);
+
+      dispatch(mailAction.setReceivedMails(receivedMailsNew));
+      dispatch(mailAction.setUnread(totalUnread));
+
+      notify("Mail Deleted Successfully");
+    } catch (error) {
+      console.error("Error deleting mail:", error);
+    }
+  };
+
   return (
-    <div className="mt-[-100vh] ml-36 w-full h-10vh text-black p-11">
-      <ul>
-        {receivedMails.map((mail) => (
-          <motion.li
-            key={mail.id}
-            whileHover={{ scale: 1.02, cursor: "pointer" }}
-          >
-            <ReceivedMailList
-              id={mail.id}
-              sentBy={mail.senderMail}
-              subject={mail.subject}
-              starred={mail.starred}
-              read={mail.read}
-              body={mail.body.replace(/(<([^>]+)>)/gi, "")}
-              timestamp={mail.timestamp}
-              readMessageHandler={readMessageHandler}
-              toggleStarredMessage={toggleStarredMessage}
-            />
-          </motion.li>
-        ))}
-      </ul>
-      <Outlet />
-    </div>
+    <>
+      <ToastContainer />
+      <div className="mt-[-100vh] ml-36 w-full h-10vh text-black p-11">
+        <ul>
+          {receivedMails.map((mail) => (
+            <motion.li
+              key={mail.id}
+              whileHover={{ scale: 1.02, cursor: "pointer" }}
+            >
+              <ReceivedMailList
+                id={mail.id}
+                sentBy={mail.senderMail}
+                subject={mail.subject}
+                starred={mail.starred}
+                read={mail.read}
+                body={mail.body.replace(/(<([^>]+)>)/gi, "")}
+                timestamp={mail.timestamp}
+                readMessageHandler={readMessageHandler}
+                toggleStarredMessage={toggleStarredMessage}
+                deleteMailHandler={deleteMailHandler}
+              />
+            </motion.li>
+          ))}
+        </ul>
+        <Outlet />
+      </div>
+    </>
   );
 };
 

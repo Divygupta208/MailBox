@@ -1,0 +1,17 @@
+.dropdown-container {
+  position: relative;
+  z-index: 1; /* Set a higher z-index */
+  overflow: hidden; /* Hide overflow content */
+}
+
+.dropdown-options {
+  position: absolute;
+  top: calc(100% + 5px); /* Position below the list item */
+  right: 0;
+  z-index: 40;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+}
