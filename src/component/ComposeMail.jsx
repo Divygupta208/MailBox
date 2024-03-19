@@ -6,12 +6,15 @@ import { AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../store/user-slice";
 import { useParams } from "react-router-dom";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import { uiActions } from "../store/ui-slice";
 
 const ComposeMailForm = () => {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.ui.showCompose);
   const senderMail = useRef();
   const useremail = useParams();
+  const notify = (message) => toast(message);
   localStorage.setItem("email", useremail.id);
   const receiverMail = useRef();
   const subjectRef = useRef();
@@ -21,6 +24,10 @@ const ComposeMailForm = () => {
 
   const receiverId = useSelector((state) => state.user.receiverId);
   const userId = useSelector((state) => state.user.userUId);
+
+  const handleCloseModal = () => {
+    dispatch(uiActions.setShowCompose());
+  };
 
   const handleSendMail = async (event) => {
     event.preventDefault();
@@ -99,13 +106,13 @@ const ComposeMailForm = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        console.log("Email sent successfully:", data.name);
+        notify("Mail Sent");
       } else {
         throw new Error("Failed to send email");
       }
     } catch (error) {
       console.error("Error sending email:", error);
+      notify("Error Sending Mail");
     }
   };
 
@@ -131,7 +138,6 @@ const ComposeMailForm = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Email received successfully:", data.name);
       } else {
         throw new Error("Failed to receive email");
       }
@@ -141,28 +147,40 @@ const ComposeMailForm = () => {
   };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          transition={{ duration: 0.3 }}
-          className="  inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-[-10vh]"
-        >
+    <>
+      <ToastContainer theme="dark" />
+      <AnimatePresence>
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.3 }}
-            className="max-w-2xl mx-auto mt-[-90vh] bg-[#d8d8d8] p-8 rounded-lg shadow-lg"
+            initial={{ opacity: 0, y: 200, x: 200, scale: 0.5 }}
+            animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 200, x: 200 }}
+            transition={{
+              duration: 0.3,
+              type: "spring",
+              damping: 10,
+              stiffness: 70,
+              bounce: 0,
+            }}
+            className=" absolute max-w-2xl mx-auto ml-[60vw] bg-[#281f3d] p-8 rounded-lg shadow-lg mt-[-70vh]"
           >
-            <h2 className="text-2xl font-bold mb-4">Compose Email</h2>
+            <div className="flex justify-between">
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                Compose Email
+              </h2>
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="btn-primary text-white border-2 border-white rounded-full px-5 hover:bg-red-400  "
+              >
+                X
+              </button>
+            </div>
             <form className="space-y-4">
               <div>
                 <label
                   htmlFor="sender"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-400"
                 >
                   Sender's Email:
                 </label>
@@ -180,7 +198,7 @@ const ComposeMailForm = () => {
               <div>
                 <label
                   htmlFor="receiver"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-400"
                 >
                   Receiver's Email:
                 </label>
@@ -197,7 +215,7 @@ const ComposeMailForm = () => {
               <div>
                 <label
                   htmlFor="subject"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-400"
                 >
                   Subject:
                 </label>
@@ -214,12 +232,12 @@ const ComposeMailForm = () => {
               <div>
                 <label
                   htmlFor="body"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-400"
                 >
                   Body:
                 </label>
                 <ReactQuill
-                  className="bg-white rounded-lg border-none"
+                  className="bg-slate-200 rounded-lg border-none"
                   theme="snow"
                   ref={BodyRef}
                   modules={{
@@ -237,19 +255,16 @@ const ComposeMailForm = () => {
 
               <button
                 type="submit"
-                className="btn-primary"
+                className="btn-primary text-white border-2 border-white rounded px-6 hover:bg-violet-800"
                 onClick={handleSendMail}
               >
                 Send
               </button>
-              <button type="button" className="btn-primary">
-                Close
-              </button>
             </form>
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

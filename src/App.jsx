@@ -10,17 +10,25 @@ import ComposeMailForm from "./component/ComposeMail";
 import SentMails from "./component/SentMails";
 import ReceivedMails from "./component/ReceivedMails";
 import ReadMessage from "./component/ReadMessage";
+import { useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 function App() {
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
   return (
     <>
       <>
         {/* <ParticleLoader /> */}
-
+        <ToastContainer />
         <Routes>
-          <Route path="/" element=<LoginForm /> />
+          {!isLoggedIn && <Route path="/" element=<LoginForm /> />}
+
           <Route path="/:id/Home" element={<Layout />}>
-            <Route index element={<HomePage />} />
+            <Route
+              path=""
+              element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
+            />
             <Route path="compose" element={<ComposeMailForm />} />
             <Route path="sent" element={<SentMails />} />
             <Route path="inbox" element={<ReceivedMails />}>
