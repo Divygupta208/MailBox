@@ -20,7 +20,7 @@ function App() {
     <>
       <>
         {/* <ParticleLoader /> */}
-        <ToastContainer />
+
         <Routes>
           {!isLoggedIn && <Route path="/" element=<LoginForm /> />}
 
@@ -29,7 +29,7 @@ function App() {
               path=""
               element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
             />
-            <Route path="compose" element={<ComposeMailForm />} />
+            {/* <Route path="compose" element={<ComposeMailForm />} /> */}
             <Route path="sent" element={<SentMails />} />
             <Route path="inbox" element={<ReceivedMails />}>
               <Route path="readmail" element={<ReadMessage />} />
