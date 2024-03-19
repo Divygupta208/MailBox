@@ -1,5 +1,5 @@
 import { AnimatePresence, easeInOut, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SlMenu } from "react-icons/sl";
 import { TfiWrite } from "react-icons/tfi";
 import { BsFillInboxesFill } from "react-icons/bs";
@@ -10,7 +10,7 @@ import { BsShieldFillX } from "react-icons/bs";
 import Navbar from "./Navbar";
 import { Link, Navigate } from "react-router-dom";
 import ComposeMailForm from "./ComposeMail";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../store/ui-slice";
 import { Example } from "./NeuButton";
 
@@ -34,6 +34,8 @@ const IconSideNav = () => {
 };
 
 const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
+  const totalUnread = useSelector((state) => state.mails.totalUnread);
+
   const dispatch = useDispatch();
 
   const showCompose = () => {
@@ -82,6 +84,16 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
         >
           <BsFillInboxesFill />
           {expanded && <span className="ml-2 text-sm">Inbox</span>}
+          {totalUnread > 0 && !expanded && (
+            <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-4 -end-4 dark:border-gray-900">
+              {totalUnread}
+            </div>
+          )}
+          {totalUnread > 0 && expanded && (
+            <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-0 -end-0 dark:border-gray-900">
+              {totalUnread}
+            </div>
+          )}
         </NavItem>
       </Link>
 

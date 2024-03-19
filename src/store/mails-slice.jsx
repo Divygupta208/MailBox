@@ -5,6 +5,7 @@ const mailSlice = createSlice({
   initialState: {
     sentMails: [],
     receivedMails: [],
+    totalUnread: 0,
   },
   reducers: {
     setSentMails: (state, action) => {
@@ -21,6 +22,10 @@ const mailSlice = createSlice({
       if (index !== -1) {
         state.receivedMails[index] = updatedMail;
       }
+    },
+
+    setUnread: (state, action) => {
+      state.totalUnread = action.payload;
     },
   },
 });
