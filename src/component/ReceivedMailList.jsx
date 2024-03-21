@@ -10,6 +10,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineFlag, AiOutlineCheck } from "react-icons/ai";
 const ReceivedMailList = ({
   id,
+  sendername,
   sentBy,
   starred,
   subject,
@@ -49,6 +50,7 @@ const ReceivedMailList = ({
 
   const handleMailClick = (
     id,
+    sendername,
     sentBy,
     subject,
     body,
@@ -59,6 +61,7 @@ const ReceivedMailList = ({
       state: {
         email: {
           id: id,
+          sendername: sendername,
           sentBy: sentBy,
           starred: messageStarred,
           subject: subject,
@@ -72,9 +75,18 @@ const ReceivedMailList = ({
 
   const readMessage = async () => {
     setMessageRead(true);
-    handleMailClick(id, sentBy, subject, body, timestamp, messageStarred);
+    handleMailClick(
+      id,
+      sendername,
+      sentBy,
+      subject,
+      body,
+      timestamp,
+      messageStarred
+    );
     readMessageHandler(
       id,
+      sendername,
       sentBy,
       starred,
       subject,
@@ -88,11 +100,12 @@ const ReceivedMailList = ({
 
   const toggleStarred = async (e) => {
     e.stopPropagation();
-    const newStarredStatus = !messageStarred; // Toggle the starred status
-    setMessageStarred(newStarredStatus); // Update the local state
+    const newStarredStatus = !messageStarred;
+    setMessageStarred(newStarredStatus);
 
     toggleStarredMessage(
       id,
+      sendername,
       sentBy,
       newStarredStatus,
       subject,
@@ -105,7 +118,7 @@ const ReceivedMailList = ({
   return (
     <>
       <motion.div
-        className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw] relative -z-10"
+        className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw] relative -z-5 bg-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -118,7 +131,11 @@ const ReceivedMailList = ({
               <span className="absolute top-1.5 right-1 w-3.5 h-3.5 bg-red-400 border-2 border-orange-200 dark:border-gray-800 rounded-full"></span>
             )}
           </div>
-          <span className="font-bold mr-4">{sentBy}</span>
+          <div className="flex">
+            <span className="font-bold  text-md mr-4">{sendername}</span>
+            <span className="mr-2">|</span>
+            <span className="font-bold text-md mr-4">{sentBy}</span>
+          </div>
 
           {messageStarred ? (
             <motion.button

@@ -13,43 +13,29 @@ const ReceivedMails = () => {
   const navigate = useNavigate();
   const notify = (message) => toast(message);
   const totalUnread = useSelector((state) => state.mails.totalUnread);
+  const [intervalId, setIntervalId] = useState(null);
   const [starred, setStarred] = useState();
   const receivedMails = useSelector((state) => state.mails.receivedMails);
   const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
 
+  const fetchReceivedMailsInterval = () => {
+    dispatch(mailAction.fetchReceivedMails(decodedMail));
+  };
+
   useEffect(() => {
-    const fetchReceivedMails = async () => {
-      const response = await fetch(
-        `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${decodedMail}.json`
-      );
+    fetchReceivedMailsInterval();
 
-      if (response.ok) {
-        const data = await response.json();
+    // const id = setInterval(fetchReceivedMailsInterval, 2000);
+    // setIntervalId(id);
 
-        const receivedMailArray = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-
-        dispatch(mailAction.setReceivedMails(receivedMailArray));
-
-        const totalUnread = receivedMailArray.reduce((count, email) => {
-          if (!email.read) {
-            return count + 1;
-          } else {
-            return count;
-          }
-        }, 0);
-
-        dispatch(mailAction.setUnread(totalUnread));
-      }
+    return () => {
+      clearInterval(intervalId);
     };
-
-    fetchReceivedMails();
-  }, []);
+  }, [dispatch, userMail.id]);
 
   const readMessageHandler = async (
     id,
+    sendername,
     sentBy,
     starred,
     subject,
@@ -78,6 +64,7 @@ const ReceivedMails = () => {
       {
         method: "PUT",
         body: JSON.stringify({
+          sendername: sendername,
           senderMail: sentBy,
           starred: starred,
           subject: subject,
@@ -95,6 +82,7 @@ const ReceivedMails = () => {
 
   const toggleStarredMessage = async (
     id,
+    sendername,
     sentBy,
     newStarredStatus,
     subject,
@@ -113,6 +101,7 @@ const ReceivedMails = () => {
       {
         method: "PUT",
         body: JSON.stringify({
+          sendername: sendername,
           senderMail: sentBy,
           starred: newStarredStatus,
           subject: subject,
@@ -160,15 +149,17 @@ const ReceivedMails = () => {
   return (
     <>
       <ToastContainer />
-      <div className="mt-[-100vh] ml-36 w-full h-10vh text-black p-11">
+      <div className="mt-[-100vh] ml-16 w-[100vw] h-[100vh] text-black p-10 px-20 bg-gradient-to-br from-violet-100 to-gray-800 -z-30">
         <ul>
           {receivedMails.map((mail) => (
             <motion.li
+              className="mt-2"
               key={mail.id}
               whileHover={{ scale: 1.02, cursor: "pointer" }}
             >
               <ReceivedMailList
                 id={mail.id}
+                sendername={mail.sendername}
                 sentBy={mail.senderMail}
                 subject={mail.subject}
                 starred={mail.starred}
@@ -179,6 +170,7 @@ const ReceivedMails = () => {
                 toggleStarredMessage={toggleStarredMessage}
                 deleteMailHandler={deleteMailHandler}
               />
+              <hr className="mt-1"></hr>
             </motion.li>
           ))}
         </ul>
