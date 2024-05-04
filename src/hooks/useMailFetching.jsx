@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { mailAction } from "../store/mails-slice";
 
 export const useMailFetching = (apiEndpoint, decodedMail, type) => {
   const [mails, setMails] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchMails = async (url) => {
       try {
@@ -28,22 +30,24 @@ export const useMailFetching = (apiEndpoint, decodedMail, type) => {
       }
     };
 
-    if (type === "received") {
-      fetchMails(`${apiEndpoint}/receivedEmails/${decodedMail}.json`);
-    } else if (type === "sent") {
-      fetchMails(`${apiEndpoint}/sentEmails/${decodedMail}.json`);
-    }
+    // if (type === "received") {
+    //   fetchMails(`${apiEndpoint}/receivedEmails/${decodedMail}.json`);
+    // } else if (type === "sent") {
+    //   fetchMails(`${apiEndpoint}/sentEmails/${decodedMail}.json`);
+    // } else if (type === "spam") {
+    //   fetchMails(`${apiEndpoint}/spamEmails/${decodedMail}.json`);
+    // }
 
-    // const intervalId = setInterval(() => {
-    //   if (type === "received") {
-    //     fetchMails(`${apiEndpoint}/receivedEmails/${decodedMail}.json`);
-    //   } else if (type === "sent") {
-    //     fetchMails(`${apiEndpoint}/sentEmails/${decodedMail}.json`);
-    //   }
-    // }, 5000);
+    const intervalId = setInterval(() => {
+      if (type === "received") {
+        fetchMails(`${apiEndpoint}/receivedEmails/${decodedMail}.json`);
+      } else if (type === "sent") {
+        fetchMails(`${apiEndpoint}/sentEmails/${decodedMail}.json`);
+      }
+    }, 3000);
 
-    // return () => clearInterval(intervalId);
-  }, [apiEndpoint, decodedMail, type]);
+    return () => clearInterval(intervalId);
+  }, [apiEndpoint, decodedMail, dispatch]);
 
   return { mails, unreadCount };
 };

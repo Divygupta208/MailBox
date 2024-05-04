@@ -8,7 +8,7 @@ import { RiDraftLine } from "react-icons/ri";
 import { FaTrashAlt } from "react-icons/fa";
 import { BsShieldFillX } from "react-icons/bs";
 import Navbar from "./Navbar";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import ComposeMailForm from "./ComposeMail";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../store/ui-slice";
@@ -16,10 +16,29 @@ import { Example } from "./NeuButton";
 
 const IconSideNav = () => {
   const [expanded, setExpanded] = useState(false);
+  const location = useLocation();
+  const userMail = useParams();
   const [selected, setSelected] = useState(0);
   const expandSideBar = () => {
     setExpanded(!expanded);
   };
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname === `/${userMail.id}/Home/compose`) {
+      setSelected(0);
+    } else if (pathname === `/${userMail.id}/Home/inbox`) {
+      setSelected(1);
+    } else if (pathname === `/${userMail.id}/Home/sent`) {
+      setSelected(2);
+    } else if (pathname === `/${userMail.id}/Home/drafts`) {
+      setSelected(3);
+    } else if (pathname === `/${userMail.id}/Home/deleted`) {
+      setSelected(4);
+    } else if (pathname === `/${userMail.id}/Home/spam`) {
+      setSelected(5);
+    }
+  }, [location.pathname]);
 
   return (
     <div className={`text-slate-100`}>
@@ -48,7 +67,7 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
       `}
       initial={{ width: "70px", x: -100 }}
       animate={{
-        width: expanded ? "180px" : "70px",
+        width: expanded ? "170px" : "70px",
 
         x: 0,
       }}
@@ -62,17 +81,17 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
       </div>
 
       <div className="flex gap-5 justify-center mt-20" onClick={showCompose}>
-        <Link to={"compose"}>
-          <NavItem
-            selected={selected === 0}
-            id={0}
-            setSelected={setSelected}
-            expanded={expanded}
-          >
-            <TfiWrite />
-            {expanded && <span className="ml-2 text-sm">Compose</span>}
-          </NavItem>
-        </Link>
+        {/* <Link to={"compose"}> */}
+        <NavItem
+          selected={selected === 0}
+          id={0}
+          setSelected={setSelected}
+          expanded={expanded}
+        >
+          <TfiWrite />
+          {expanded && <span className="ml-2 text-sm">Compose</span>}
+        </NavItem>
+        {/* </Link> */}
       </div>
 
       <Link to={"inbox"}>
@@ -128,16 +147,17 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
         <FaTrashAlt />
         {expanded && <span className="ml-2 text-sm">Trash</span>}
       </NavItem>
-
-      <NavItem
-        selected={selected === 5}
-        id={5}
-        setSelected={setSelected}
-        expanded={expanded}
-      >
-        <BsShieldFillX />
-        {expanded && <span className="ml-2 text-sm">Spam</span>}
-      </NavItem>
+      <Link to={"spam"}>
+        <NavItem
+          selected={selected === 5}
+          id={5}
+          setSelected={setSelected}
+          expanded={expanded}
+        >
+          <BsShieldFillX />
+          {expanded && <span className="ml-2 text-sm">Spam</span>}
+        </NavItem>
+      </Link>
     </motion.nav>
   );
 };
@@ -145,7 +165,7 @@ const SideNav = ({ expanded, expandSideBar, selected, setSelected }) => {
 const NavItem = ({ children, selected, id, setSelected, expanded }) => {
   return (
     <motion.button
-      className={`p-3 text-xl bg-black hover:bg-[#594c67] rounded-3xl transition-colors relative ${
+      className={`p-3 text-xl bg-black hover:bg-[#04ffd9] hover:text-black rounded-3xl transition-colors relative ${
         expanded ? "ml-[-2rem]" : ""
       }
         `}
@@ -159,7 +179,7 @@ const NavItem = ({ children, selected, id, setSelected, expanded }) => {
       <AnimatePresence>
         {selected && (
           <motion.span
-            className=" absolute inset-0 rounded-md bg-[#6629cf] z-[1] "
+            className=" absolute inset-0  bg-[#7122e0] z-[1] "
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}

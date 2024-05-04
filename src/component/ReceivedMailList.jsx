@@ -8,6 +8,9 @@ import {
 } from "react-icons/md";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineFlag, AiOutlineCheck } from "react-icons/ai";
+import useMailUpdater from "../hooks/useMailUpdater";
+import { useDispatch, useSelector } from "react-redux";
+import { mailAction } from "../store/mails-slice";
 const ReceivedMailList = ({
   id,
   sendername,
@@ -16,19 +19,22 @@ const ReceivedMailList = ({
   subject,
   body,
   read,
+  spam,
   timestamp,
   readMessageHandler,
-  toggleStarredMessage,
   deleteMailHandler,
 }) => {
+  const dispatch = useDispatch();
   const date = new Date(timestamp);
-
+  const receivedMails = useSelector((state) => state.mails.receivedMails);
   const [messageRead, setMessageRead] = useState(read);
   const [showOptions, setShowOptions] = useState(false);
   const [messageStarred, setMessageStarred] = useState(starred);
+  const [messageSpam, setMessageSpam] = useState(spam);
   const userMail = useParams();
   const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
   const navigate = useNavigate();
+  const { toggleSpam, markAsRead, toggleStarred } = useMailUpdater();
 
   const toggleOptions = (e) => {
     e.stopPropagation();
@@ -36,12 +42,31 @@ const ReceivedMailList = ({
   };
 
   const handleDelete = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     deleteMailHandler(id);
   };
 
-  const handleSpam = () => {
-    // Handle spam action
+  const handleSpam = async (e) => {
+    e.stopPropagation();
+    const spamStatus = !messageSpam;
+    setMessageSpam(spamStatus);
+
+    // toggleSpamMessage(id,sendername,sentBy,starred,subject,body,read,spamStatus, timestamp );
+
+    await toggleSpam(
+      id,
+      "https://mailbox-e16e0-default-rtdb.firebaseio.com",
+      decodedMail,
+      spamStatus
+    );
+
+    const updatedReceivedMails = receivedMails.map((mail) =>
+      mail.id === id ? { ...mail, spam: spamStatus } : mail
+    );
+    dispatch(mailAction.setReceivedMails(updatedReceivedMails));
+
+    dispatch(mailAction.moveMailToSpam(decodedMail, id));
   };
 
   const handleMark = () => {
@@ -50,6 +75,7 @@ const ReceivedMailList = ({
 
   const handleMailClick = (
     id,
+    spam,
     sendername,
     sentBy,
     subject,
@@ -66,6 +92,7 @@ const ReceivedMailList = ({
           starred: messageStarred,
           subject: subject,
           body: body,
+          spam: spam,
           read: messageRead,
           timestamp: timestamp,
         },
@@ -81,6 +108,7 @@ const ReceivedMailList = ({
       sentBy,
       subject,
       body,
+      spam,
       timestamp,
       messageStarred
     );
@@ -91,34 +119,36 @@ const ReceivedMailList = ({
       starred,
       subject,
       body,
-      timestamp,
-      messageRead
+      spam,
+      timestamp
     );
   };
 
   //toggle starred
 
-  const toggleStarred = async (e) => {
+  const toggleStarredHandler = async (e) => {
     e.stopPropagation();
     const newStarredStatus = !messageStarred;
     setMessageStarred(newStarredStatus);
 
-    toggleStarredMessage(
+    // toggleStarredMessage(id,sendername,sentBy,newStarredStatus,subject,body,spam,read,timestamp);
+    await toggleStarred(
       id,
-      sendername,
-      sentBy,
-      newStarredStatus,
-      subject,
-      body,
-      read,
-      timestamp
+      "https://mailbox-e16e0-default-rtdb.firebaseio.com",
+      decodedMail,
+      newStarredStatus
     );
+
+    const updatedReceivedMails = receivedMails.map((mail) =>
+      mail.id === id ? { ...mail, starred: newStarredStatus } : mail
+    );
+    dispatch(mailAction.setReceivedMails(updatedReceivedMails));
   };
 
   return (
     <>
       <motion.div
-        className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw] relative -z-5 bg-white"
+        className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw] relative -z-9 bg-white ml-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -140,7 +170,7 @@ const ReceivedMailList = ({
           {messageStarred ? (
             <motion.button
               whileHover={{ scale: 1.1 }}
-              onClick={toggleStarred}
+              onClick={toggleStarredHandler}
               className="text-yellow-500 mr-4"
             >
               <MdStar />
@@ -148,7 +178,7 @@ const ReceivedMailList = ({
           ) : (
             <motion.button
               whileHover={{ scale: 1.1 }}
-              onClick={toggleStarred}
+              onClick={toggleStarredHandler}
               className="text-yellow-500 mr-4"
             >
               <MdStarBorder />
@@ -175,7 +205,7 @@ const ReceivedMailList = ({
         </div>
         {showOptions && (
           <div
-            className="absolute top-5 -right-20 mt-1 z-40 bg-white border border-gray-200 rounded-lg shadow-lg p-2   dropdown-options"
+            className="absolute top-5 -right-20 mt-1 z-100 bg-white border border-gray-200 rounded-lg shadow-lg p-2   dropdown-options"
             onMouseLeave={() => setShowOptions(false)}
           >
             <button
@@ -186,7 +216,7 @@ const ReceivedMailList = ({
               Delete
             </button>
             <button
-              className="flex items-center w-full py-1 px-2 text-left text-gray-600 hover:bg-gray-100"
+              className="flex items-center w-full py-1 px-2 text-left text-gray-600 hover:bg-orange-400"
               onClick={handleSpam}
             >
               <AiOutlineFlag className="mr-2" />

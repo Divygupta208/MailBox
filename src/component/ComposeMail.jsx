@@ -21,9 +21,7 @@ const ComposeMailForm = () => {
   const BodyRef = useRef();
   const token = useSelector((state) => state.user.token);
   const userMail = useSelector((state) => state.user.email);
-
-  const receiverId = useSelector((state) => state.user.receiverId);
-  const userId = useSelector((state) => state.user.userUId);
+  const username = useSelector((state) => state.user.username);
 
   const handleCloseModal = () => {
     dispatch(uiActions.setShowCompose());
@@ -35,36 +33,36 @@ const ComposeMailForm = () => {
     const subject = subjectRef.current.value;
     const body = BodyRef.current.value;
 
-    //part-1 fetching users unique Ids;
-    const fetchUserId = async (userMail) => {
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=
-        AIzaSyDpOjJsAurA_2hvvb5UoPxME3muFlO0YZQ`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            idToken: token,
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+    // //part-1 fetching users unique Ids;
+    // const fetchUserId = async (userMail) => {
+    //   const response = await fetch(
+    //     `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=
+    //     AIzaSyDpOjJsAurA_2hvvb5UoPxME3muFlO0YZQ`,
+    //     {
+    //       method: "POST",
+    //       body: JSON.stringify({
+    //         idToken: token,
+    //       }),
+    //       headers: { "Content-Type": "application/json" },
+    //     }
+    //   );
 
-      const dataId = await response.json();
+    //   const dataId = await response.json();
 
-      console.log(dataId);
+    //   console.log(dataId);
 
-      const user = dataId.users.find((user) => user.email === userMail);
+    //   const user = dataId.users.find((user) => user.email === userMail);
 
-      if (user) {
-        const userId = user.localId;
-        dispatch(userActions.setUserUid(userId));
-        console.log(`User ID for${userId}`);
-      } else {
-        console.log(`User with email ${userEmailToFind} not found.`);
-      }
-    };
+    //   if (user) {
+    //     const userId = user.localId;
+    //     dispatch(userActions.setUserUid(userId));
+    //     console.log(`User ID for${userId}`);
+    //   } else {
+    //     console.log(`User with email ${userEmailToFind} not found.`);
+    //   }
+    // };
 
-    fetchUserId(userMail);
+    // fetchUserId(userMail);
 
     //part-2  storing in sent mails as sending mails
 
@@ -80,7 +78,8 @@ const ComposeMailForm = () => {
       receiverMail.current.value.replace("@", "%40").replace(".", "%25"),
       userMail,
       subject,
-      body
+      body,
+      username
     );
   };
 
@@ -96,6 +95,7 @@ const ComposeMailForm = () => {
             body: body,
             starred: false,
             read: false,
+            spam: false,
             timestamp: new Date().toISOString(),
           }),
           headers: {
@@ -116,7 +116,14 @@ const ComposeMailForm = () => {
     }
   };
 
-  const receiveEmail = async (receiverMail, senderMail, subject, body) => {
+  const receiveEmail = async (
+    receiverMail,
+    senderMail,
+    subject,
+    body,
+    username
+  ) => {
+    console.log(username);
     try {
       const response = await fetch(
         `https://mailbox-e16e0-default-rtdb.firebaseio.com/receivedEmails/${receiverMail}.json`,
@@ -126,11 +133,13 @@ const ComposeMailForm = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            sendername: username,
             senderMail: senderMail,
             subject: subject,
             body: body,
             starred: false,
             read: false,
+            spam: false,
             timestamp: new Date().toISOString(),
           }),
         }
@@ -138,6 +147,7 @@ const ComposeMailForm = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
       } else {
         throw new Error("Failed to receive email");
       }
@@ -148,21 +158,26 @@ const ComposeMailForm = () => {
 
   return (
     <>
-      <ToastContainer theme="dark" />
+      <ToastContainer />
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 200, x: 200, scale: 0.5 }}
+            initial={{ opacity: 0, y: 200, x: 200, scale: 0 }}
             animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 200, x: 200 }}
+            exit={{
+              opacity: 0,
+              y: 200,
+              x: 200,
+              scale: 0,
+            }}
             transition={{
-              duration: 0.3,
+              duration: 0.2,
               type: "spring",
-              damping: 10,
-              stiffness: 70,
+              damping: 15,
+
               bounce: 0,
             }}
-            className=" absolute max-w-2xl mx-auto ml-[60vw] bg-[#281f3d] p-8 rounded-lg shadow-lg mt-[-70vh]"
+            className=" absolute max-w-2xl mx-auto ml-[60vw] bg-gradient-to-br from-purple-700 to-teal-500 p-6 rounded-lg shadow-lg mt-[-70vh] z-50"
           >
             <div className="flex justify-between">
               <h2 className="text-2xl font-bold mb-4 text-white">
@@ -190,7 +205,7 @@ const ComposeMailForm = () => {
                   value={useremail.id}
                   id="sender"
                   name="sender"
-                  className="input-field w-full rounded-lg"
+                  className="input-field w-full rounded-lg p-1"
                   placeholder="Enter sender's email"
                 />
               </div>
@@ -207,7 +222,7 @@ const ComposeMailForm = () => {
                   ref={receiverMail}
                   id="receiver"
                   name="receiver"
-                  className="input-field w-full rounded-lg"
+                  className="input-field w-full rounded-lg p-1"
                   placeholder="Enter receiver's email"
                 />
               </div>
@@ -224,7 +239,7 @@ const ComposeMailForm = () => {
                   ref={subjectRef}
                   id="subject"
                   name="subject"
-                  className="input-field w-full rounded-lg"
+                  className="input-field w-full rounded-lg p-1"
                   placeholder="Enter subject"
                 />
               </div>

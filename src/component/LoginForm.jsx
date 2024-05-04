@@ -5,9 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import ParticleLoader from "./Particles";
 import { userActions } from "../store/user-slice";
+import { useDispatch } from "react-redux";
+import { motion } from "framer-motion";
 
 const LoginForm = () => {
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [login, setLogIn] = useState(false);
@@ -116,9 +118,37 @@ const LoginForm = () => {
   return (
     <>
       <ToastContainer />
-      <Card>
+      <span className="absolute bg-gradient-to-br from-slate-100 to-stone-700 w-full h-full" />
+
+      <img
+        src="/1_sZ1lHejgHCEOo5djHqKf4g.gif"
+        className="absolute w-80 ml-10 mix-blend-multiply"
+      />
+      <img
+        src="/1_sZ1lHejgHCEOo5djHqKf4g.gif"
+        className="absolute mt-72 ml-[30vw] w-80 mix-blend-multiply"
+      />
+
+      <span className="absolute mt-56 ml-80 flex">
+        {["g", "o", "-", "m", "a", "i", "l"].map((letter, index) => (
+          <motion.span
+            key={index}
+            initial={{ y: -200, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{
+              delay: 0.3 + index * 0.1,
+              duration: 0.5,
+            }}
+            className="text-black text-[7rem] font-bold font-custom"
+          >
+            {letter}
+          </motion.span>
+        ))}
+      </span>
+
+      <div className=" absolute w-96 h-[50vh] rounded-sm shadow-lg  flex flex-wrap ml-[60vw] mt-20 ">
         <form
-          className="form-main flex flex-col backdrop-blur-sm bg-white/10 justify-self-center items-center "
+          className="form-main flex flex-col backdrop-blur-sm bg-white/10 justify-self-center items-center"
           onSubmit={submitHandler}
         >
           {login ? (
@@ -171,9 +201,9 @@ const LoginForm = () => {
             </button>
           )}
         </form>
-        <div className="backdrop-blur-sm bg-white/10 text-center w-[100%] ">
+        <div className="backdrop-blur-sm bg-white/10 text-center w-[100%] mb-40 ">
           {!login && (
-            <div className="relative mt-10 bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
+            <div className="relative bg-green-200 border-black w-60 p-2 ms-[70px] rounded mb-7 text-green-700">
               already have an account?
               <> </>
               <button onClick={loginHandler} className="text-green-900">
@@ -194,7 +224,7 @@ const LoginForm = () => {
             </div>
           )}
         </div>
-      </Card>
+      </div>
     </>
   );
 };

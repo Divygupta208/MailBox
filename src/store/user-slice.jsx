@@ -5,7 +5,8 @@ const userSlice = createSlice({
   initialState: {
     token: localStorage.getItem("token") || null,
     email: localStorage.getItem("email") || null,
-    isLoggedIn: false,
+    isLoggedIn: localStorage.getItem("isLoggedIn") || false,
+    username: null,
     userUId: null,
     receiverId: null,
   },
@@ -26,6 +27,10 @@ const userSlice = createSlice({
 
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = true;
+    },
+
+    setUserName: (state, action) => {
+      state.username = action.payload;
     },
   },
 });

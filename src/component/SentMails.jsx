@@ -3,6 +3,7 @@ import SentMailList from "./SentMailList";
 import { useDispatch, useSelector } from "react-redux";
 import { mailAction } from "../store/mails-slice";
 import { useParams } from "react-router-dom";
+import { useMailFetching } from "../hooks/useMailFetching";
 
 const SentMails = () => {
   const dispatch = useDispatch();
@@ -10,29 +11,29 @@ const SentMails = () => {
   const sentMails = useSelector((state) => state.mails.sentMails);
   const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
 
+  const fetchSentMailsInterval = () => {
+    dispatch(mailAction.fetchSentMails(decodedMail));
+  };
+
   useEffect(() => {
-    const fetchSentMails = async () => {
-      const response = await fetch(
-        `https://mailbox-e16e0-default-rtdb.firebaseio.com/sentEmails/${decodedMail}.json`
-      );
+    fetchSentMailsInterval();
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
+    // const id = setInterval(fetchSentMailsInterval, 3000);
+    // setIntervalId(id);
 
-        const sentMailsArray = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
+  }, [dispatch, userMail.id]);
 
-        dispatch(mailAction.setSentMails(sentMailsArray));
-      }
-    };
-
-    // fetchSentMails();
-  }, []);
-
-  //   console.log(sentMails);
+  // const { mails } = useMailFetching(
+  //   "https://mailbox-e16e0-default-rtdb.firebaseio.com",
+  //   decodedMail,
+  //   "sent"
+  // );
+  // useEffect(() => {
+  //   dispatch(mailAction.setSentMails(mails));
+  // }, [mails]);
 
   return (
     <div className="mt-[-100vh] ml-36 w-full h-[100vh]  text-black p-11">

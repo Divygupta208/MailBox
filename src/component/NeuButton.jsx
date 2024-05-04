@@ -18,20 +18,20 @@ const AnimatedHamburgerButton = () => {
         initial={false}
         animate={active ? "open" : "closed"}
         onClick={() => setActive((pv) => !pv)}
-        className={`absolute mt-3 ml-[-1.5rem] h-12 w-12 rounded-full bg-black transition-colors 
+        className={`absolute mt-3 ml-[-1.5rem] h-12 w-12 bg-[#000000] rounded transition-colors 
         
-        shadow-[-5px_-5px_10px_rgba(0,0,0,0.8),_5px_5px_10px_rgba(0,0,0,0.25)]
+        shadow-xl
 hover:shadow-[-1px_-1px_5px_rgba(0,0,0,0.6),_1px_1px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(0,0,0,1),inset_2px_2px_4px_rgba(0,0,0,0.3)]
   `}
       >
         <motion.span
           variants={VARIANTS.top}
-          className="absolute h-1 w-10 bg-violet-600"
+          className="absolute h-1 w-10 bg-green-400"
           style={{ y: "-50%", left: "50%", x: "-50%", top: "35%" }}
         />
         <motion.span
           variants={VARIANTS.middle}
-          className="absolute h-1 w-10 bg-violet-600"
+          className="absolute h-1 w-10 bg-white"
           style={{ left: "50%", x: "-50%", top: "50%", y: "-50%" }}
         />
         <motion.span

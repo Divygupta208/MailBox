@@ -62,14 +62,17 @@ const ReadMessage = () => {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 200 }}
-        animate={{ opacity: 1, y: 0 }}
+        drag
+        dragElastic={false}
+        dragConstraints={{ bottom: 100, left: -70, right: 0, top: -400 }}
+        initial={{ opacity: 0, y: 200, x: 400 }}
+        animate={{ opacity: 1, y: -150, x: -30 }}
         exit={{ opacity: 1, y: 200 }}
         transition={{ duration: 0.5 }}
-        className="relative inset-0 items-center justify-center z-50 "
+        className=" inset-5 items-center justify-center z-60 h-[90vh] "
       >
-        <div className="bg-[#ffffff] w-[93vw] ml-[-7vw] h-[90vh] overflow-hidden shadow-lg mt-[-18vh]">
-          <div className="text-violet-900  border-gray-400 shadow-xl  flex p-4 gap-4 ">
+        <div className="bg-[#ffffff] border-2 w-[93vw] md:w-full rounded-lg ml-[-7vw] md:ml-0 h-[90vh] md:h-full overflow-hidden shadow-xl mt-[-18vh] md:mt-0">
+          <div className="text-violet-900 border-gray-400 shadow-xl flex p-4 gap-4">
             <div className="flex gap-4">
               <motion.button
                 whileHover={{ scale: 1.2 }}
@@ -91,7 +94,7 @@ const ReadMessage = () => {
               </button>
             </div>
             ||
-            <div className="text-sm flex gap-6 ml-[15rem]">
+            <div className="text-sm flex gap-6 md:ml-[15rem]">
               ||
               <button className="flex gap-1">
                 <IoArchive className="text-lg text-black" />
@@ -130,11 +133,11 @@ const ReadMessage = () => {
           <div className="flex flex-col p-4 flex-grow overflow-y-auto">
             <div className="mb-4">
               <div className="flex items-center mb-2">
-                <span className="font-bold">Divy Gupta</span>
+                <span className="font-bold">{email.sendername}</span>
                 <span className="text-gray-400">
-                  {`<`}
+                  {"<"}
                   {email.sentBy}
-                  {`>`}
+                  {">"}
                 </span>
               </div>
               <div className="flex items-center mb-2">
