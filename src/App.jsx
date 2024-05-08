@@ -1,4 +1,13 @@
-import { Navigate, Route, Routes, redirect } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  RouterProvider,
+  Routes,
+  createBrowserRouter,
+  createRoutesFromElements,
+  redirect,
+} from "react-router-dom";
 import Layout from "./Pages/Layout";
 import Form from "./component/LoginForm";
 import LoginForm from "./component/LoginForm";
@@ -40,33 +49,36 @@ function App() {
   // // dispatch(mailAction.setReceivedMails(mails));
   dispatch(mailAction.setUnread(unreadCount));
 
-  return (
-    <Routes>
-      <Route path="/" element=<LoginForm /> />
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element=<LoginForm /> />
+        <Route path="/:id/Home" element={<Layout />}>
+          <Route
+            path=""
+            element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
+          />
 
-      <Route path="/:id/Home" element={<Layout />}>
-        <Route
-          path=""
-          element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
-        />
-
-        <Route
-          path="sent"
-          element={isLoggedIn ? <SentMailsPage /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="spam"
-          element={isLoggedIn ? <SpamMailsPage /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="inbox"
-          element={isLoggedIn ? <ReceivedMailsPage /> : <Navigate to={"/"} />}
-        >
-          <Route path="readmail" element={<ReadMessage />} />
+          <Route
+            path="sent"
+            element={isLoggedIn ? <SentMailsPage /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="spam"
+            element={isLoggedIn ? <SpamMailsPage /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="inbox"
+            element={isLoggedIn ? <ReceivedMailsPage /> : <Navigate to={"/"} />}
+          >
+            <Route path="readmail" element={<ReadMessage />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </>
+    )
   );
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
