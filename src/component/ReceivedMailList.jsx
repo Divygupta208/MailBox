@@ -148,23 +148,27 @@ const ReceivedMailList = ({
   return (
     <>
       <motion.div
-        className="rounded-lg shadow-lg border-2 border-gray-200/40 p-2 flex flex-col w-[80vw] relative -z-9 bg-white ml-10"
+        className="rounded-lg shadow-lg border-2 border-gray-200/40 lg:p-2  flex flex-col flex-wrap lg:w-[80vw] h-[7vh] relative lg:-z-9 bg-white lg:ml-10 -ml-12"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         onClick={readMessage}
       >
-        <div className="flex items-center mb-4">
+        <div className="flex items-center flex-wrap mb-4 ">
           <div className="relative">
             <input type="checkbox" className="mr-6" />
             {!messageRead && (
-              <span className="absolute top-1.5 right-1 w-3.5 h-3.5 bg-red-400 border-2 border-orange-200 dark:border-gray-800 rounded-full"></span>
+              <span className="absolute lg:top-1.5 top-1 right-1 lg:w-3.5 lg:h-3.5 w-2.5 h-2.5 bg-red-400 border-2 border-orange-200 dark:border-gray-800 rounded-full"></span>
             )}
           </div>
           <div className="flex">
-            <span className="font-bold  text-md mr-4">{sendername}</span>
-            <span className="mr-2">|</span>
-            <span className="font-bold text-md mr-4">{sentBy}</span>
+            <span className="font-bold  xl:text-lg lg:text-md text-xs mr-4">
+              {sendername}
+            </span>
+            <span className="mr-2 text-sm lg:text-lg">|</span>
+            <span className="font-bold hidden xl:block lg:block xl:text-lg lg:text-md  mr-4">
+              {sentBy}
+            </span>
           </div>
 
           {messageStarred ? (
@@ -184,14 +188,14 @@ const ReceivedMailList = ({
               <MdStarBorder />
             </motion.button>
           )}
-          <span className="">
+          <span className="xl:text-lg text-xs">
             <b>
               <i>{subject}</i>
             </b>
           </span>
           <span className="ml-2 mr-2">|</span>
-          <span className="text-md text-center">{body}</span>
-          <span className="text-sm text-gray-500 ml-auto">
+          <span className="xl:text-md xl:block hidden text-center">{body}</span>
+          <span className="xl:text-sm text-xs text-gray-500 ml-auto">
             {date.toLocaleTimeString()}
             {date.toLocaleDateString()}
           </span>

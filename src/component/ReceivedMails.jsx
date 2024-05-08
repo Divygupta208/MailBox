@@ -32,13 +32,11 @@ const ReceivedMails = () => {
 
   useEffect(() => {
     fetchReceivedMailsInterval();
-
-    const id = setInterval(fetchReceivedMailsInterval, 2000);
-    setIntervalId(id);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    // const id = setInterval(fetchReceivedMailsInterval, 2000);
+    // setIntervalId(id);
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
   }, [dispatch, userMail.id]);
 
   const readMessageHandler = async (

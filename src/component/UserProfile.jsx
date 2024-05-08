@@ -118,11 +118,11 @@ const UserProfile = () => {
           animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
           exit={{ opacity: 0, x: 150, y: -300, scale: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-0 right-0 mr-2 mt-20 z-50 w-96 h-[60vh] p-4 bg-[#ffffff] shadow-xl border-2 border-black/10 rounded-lg"
+          className="fixed top-0 right-0 xl:mr-2 mr-20 mt-20 z-50 xl:w-96 w-60 h-[60vh] xl:p-4 p-1 bg-[#ffffff] shadow-xl border-2 border-black/10 rounded-lg"
         >
           <div className="flex items-center justify-end mb-4">
             <button
-              className="text-gray-500 hover:text-gray-200 px-3 bg-black rounded-full"
+              className="text-gray-500 hover:text-gray-200 xl:px-3 px-1 bg-black rounded-full"
               onClick={handleCloseProfile}
             >
               X
@@ -130,15 +130,15 @@ const UserProfile = () => {
           </div>
 
           <img
-            className="w-20 ml-[9rem] h-20 rounded-full shadow-xl object-cover"
+            className="xl:w-20 xl:ml-[9rem] xl:h-20 w-16 h-16 ml-[5rem] rounded-full shadow-xl object-cover"
             src={`${profile}`}
           />
           <hr className="mt-3 mb-3"></hr>
-          <div>
-            <p className="text-gray-600">
+          <div className="">
+            <p className="text-gray-600 text-sm xl:text-md">
               <b>username</b>: {name ? name : username}
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm xl:text-md">
               <b>Email</b>: {userMail.id}
             </p>
           </div>
@@ -156,7 +156,7 @@ const UserProfile = () => {
                 />
                 <button
                   onClick={handleChangeUsername}
-                  className="bg-blue-500 text-white px-4 py-1 rounded-md mr-2"
+                  className="bg-blue-500 text-white xl:px-4 px-1 text-md text-xs py-1 rounded-md mr-2"
                 >
                   Change Username
                 </button>
@@ -172,7 +172,7 @@ const UserProfile = () => {
                 />
                 <button
                   onClick={handleSetProfileImage}
-                  className="bg-blue-500 text-white px-4 py-1 rounded-md mr-2"
+                  className="bg-blue-500 text-white xl:px-4 px-1 text-md text-xs py-1 rounded-md mr-2"
                 >
                   Set Profile Image
                 </button>
@@ -180,16 +180,16 @@ const UserProfile = () => {
             </>
           )}
 
-          <div className="flex absolute justify-between bottom-3 gap-40">
+          <div className="flex absolute justify-between bottom-3 xl:gap-40 gap-2">
             <button
-              className=" bg-red-500 text-white px-4 py-1 rounded-md "
+              className=" bg-red-500 text-white xl:px-4 px-2 py-1 rounded-md "
               onClick={handleLogout}
             >
               Logout
             </button>
             <button
               onClick={checkProfileHandler}
-              className=" p-1 bg-black text-white rounded-xl "
+              className=" xl:p-2 p-1  bg-black text-white rounded-xl "
             >
               Check Profile
             </button>
