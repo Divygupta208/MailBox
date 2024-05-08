@@ -17,9 +17,12 @@ import { mailAction } from "./store/mails-slice";
 import { useEffect } from "react";
 import { useMailFetching } from "./hooks/useMailFetching";
 import SpamMails from "./component/SpamMails";
+import SentMailsPage from "./Pages/SentMailsPage";
+import SpamMailsPage from "./Pages/SpamMailsPage";
+import ReceivedMailsPage from "./Pages/ReceivedMailsPage";
 
 function App() {
-  const userMail = localStorage.getItem("email");
+  const userMail = localStorage?.getItem("email");
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
@@ -38,37 +41,31 @@ function App() {
   dispatch(mailAction.setUnread(unreadCount));
 
   return (
-    <>
-      <>
-        {/* <ParticleLoader /> */}
+    <Routes>
+      <Route path="/" element=<LoginForm /> />
 
-        <Routes>
-          <Route path="/" element=<LoginForm /> />
+      <Route path="/:id/Home" element={<Layout />}>
+        <Route
+          path=""
+          element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
+        />
 
-          <Route path="/:id/Home" element={<Layout />}>
-            <Route
-              path=""
-              element={isLoggedIn ? <HomePage /> : <Navigate to={"/"} />}
-            />
-
-            <Route
-              path="sent"
-              element={isLoggedIn ? <SentMails /> : <Navigate to={"/"} />}
-            />
-            <Route
-              path="spam"
-              element={isLoggedIn ? <SpamMails /> : <Navigate to={"/"} />}
-            />
-            <Route
-              path="inbox"
-              element={isLoggedIn ? <ReceivedMails /> : <Navigate to={"/"} />}
-            >
-              <Route path="readmail" element={<ReadMessage />} />
-            </Route>
-          </Route>
-        </Routes>
-      </>
-    </>
+        <Route
+          path="sent"
+          element={isLoggedIn ? <SentMailsPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="spam"
+          element={isLoggedIn ? <SpamMailsPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="inbox"
+          element={isLoggedIn ? <ReceivedMailsPage /> : <Navigate to={"/"} />}
+        >
+          <Route path="readmail" element={<ReadMessage />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
