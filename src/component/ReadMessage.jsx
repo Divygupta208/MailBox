@@ -20,7 +20,7 @@ const ReadMessage = () => {
   const dispatch = useDispatch();
   const receivedMails = useSelector((state) => state.mails.receivedMails);
   const notify = (message) => toast(message);
-  const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
+  const decodedMail = userMail?.id.replace("@", "%40").replace(".", "%25");
   const { email } = location.state;
 
   const handleCloseModal = () => {

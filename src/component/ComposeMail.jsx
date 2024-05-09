@@ -67,7 +67,7 @@ const ComposeMailForm = () => {
     //part-2  storing in sent mails as sending mails
 
     sendEmail(
-      userMail.replace("@", "%40").replace(".", "%25"),
+      userMail?.replace("@", "%40").replace(".", "%25"),
       receiverMail.current.value,
       subject,
       body
@@ -75,7 +75,7 @@ const ComposeMailForm = () => {
 
     //part3- storing in received mails as receivedEmails
     receiveEmail(
-      receiverMail.current.value.replace("@", "%40").replace(".", "%25"),
+      receiverMail.current.value?.replace("@", "%40").replace(".", "%25"),
       userMail,
       subject,
       body,

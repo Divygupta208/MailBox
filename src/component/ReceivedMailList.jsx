@@ -32,7 +32,7 @@ const ReceivedMailList = ({
   const [messageStarred, setMessageStarred] = useState(starred);
   const [messageSpam, setMessageSpam] = useState(spam);
   const userMail = useParams();
-  const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
+  const decodedMail = userMail?.id.replace("@", "%40").replace(".", "%25");
   const navigate = useNavigate();
   const { toggleSpam, markAsRead, toggleStarred } = useMailUpdater();
 

@@ -9,7 +9,7 @@ const SentMails = () => {
   const dispatch = useDispatch();
   const userMail = useParams();
   const sentMails = useSelector((state) => state.mails.sentMails);
-  const decodedMail = userMail.id.replace("@", "%40").replace(".", "%25");
+  const decodedMail = userMail?.id.replace("@", "%40").replace(".", "%25");
 
   const fetchSentMailsInterval = () => {
     dispatch(mailAction.fetchSentMails(decodedMail));
@@ -46,7 +46,7 @@ const SentMails = () => {
               starred={mail.starred}
               read={mail.read}
               subject={mail.subject}
-              body={mail.body.replace(/(<([^>]+)>)/gi, "")}
+              body={mail.body?.replace(/(<([^>]+)>)/gi, "")}
               timestamp={mail.timestamp}
             />
           </li>
